@@ -27,4 +27,20 @@ public class Topicos {
     private StatusTopico status;
     private String autor;
     private String curso;
+
+    public Topicos(DatosRegistroTopicos datos) {
+        this.titulo = datos.titulo();
+        this.mensaje = datos.mensaje();
+        this.fecha = LocalDateTime.now();
+        this.status = StatusTopico.SIN_RESPUESTA;
+        this.autor = datos.autor();
+        this.curso = datos.curso();
+    }
+
+    public void actualizarDatos(DatosActualizacionTopico datos) {
+        this.titulo = datos.titulo();
+        this.mensaje = datos.mensaje();
+        this.autor = datos.autor();
+        this.curso = datos.curso();
+    }
 }
