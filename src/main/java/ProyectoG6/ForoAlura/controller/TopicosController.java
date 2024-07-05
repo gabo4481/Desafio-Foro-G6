@@ -1,7 +1,6 @@
 package ProyectoG6.ForoAlura.controller;
 
 import ProyectoG6.ForoAlura.topicos.*;
-
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -24,10 +23,13 @@ public class TopicosController {
     @Autowired
     private TopicosRepository topicosRepository;
 
+    @Autowired
+    private TopicoService topicoService;
+
     @PostMapping
     @Transactional
     public ResponseEntity registrarTopicos(@RequestBody @Valid DatosRegistroTopicos datos, UriComponentsBuilder uriComponentsBuilder) {
-        Topicos topico = topicosRepository.save(new Topicos(datos));
+        Topicos topico = topicoService.RegistrarTopico(datos);
         DatosRespuestaTopicos datosRespuestaTopicos = new DatosRespuestaTopicos(topico);
         URI uri = uriComponentsBuilder.path("/medicos/{id}").buildAndExpand(topico.getId()).toUri();
         return ResponseEntity.created(uri).body(datosRespuestaTopicos);
@@ -36,9 +38,16 @@ public class TopicosController {
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity actualizarTopico(@PathVariable Long id,@RequestBody DatosActualizacionTopico datos) {
-        Topicos topicos = topicosRepository.getReferenceById(id);
-        topicos.actualizarDatos(datos);
-        return ResponseEntity.ok(new DatosRespuestaTopicos(topicos));
+        Optional<Topicos> optionalTopico = topicosRepository.findById(id);
+
+        if (optionalTopico.isPresent()) {
+            Topicos topicos = topicosRepository.getReferenceById(id);
+            topicos.actualizarDatos(datos);
+            return ResponseEntity.ok(new DatosRespuestaTopicos(topicos));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
     @DeleteMapping("/{id}")
@@ -62,7 +71,7 @@ public class TopicosController {
     }
 
     @GetMapping
-    @Operation(summary = "Obtiene el listado de topics")
+    @Operation(summary = "Obtiene el listado de topicos")
     public ResponseEntity<Page<DatosListadoTopicos>> listadoTopicos(@PageableDefault(size = 10, sort = "titulo") Pageable paginacion) {
         return ResponseEntity.ok(topicosRepository.findAllByOrderByTituloAsc(paginacion).map(DatosListadoTopicos::new));
     }

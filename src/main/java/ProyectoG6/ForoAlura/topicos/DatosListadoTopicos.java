@@ -1,7 +1,5 @@
 package ProyectoG6.ForoAlura.topicos;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.time.LocalDateTime;
 
 
