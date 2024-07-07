@@ -26,8 +26,10 @@ public class TopicosController {
     @Autowired
     private TopicoService topicoService;
 
+
     @PostMapping
     @Transactional
+    @Operation(summary = "registra un topico en la base de datos")
     public ResponseEntity registrarTopicos(@RequestBody @Valid DatosRegistroTopicos datos, UriComponentsBuilder uriComponentsBuilder) {
         Topicos topico = topicoService.RegistrarTopico(datos);
         DatosRespuestaTopicos datosRespuestaTopicos = new DatosRespuestaTopicos(topico);
@@ -37,6 +39,7 @@ public class TopicosController {
 
     @PutMapping("/{id}")
     @Transactional
+    @Operation(summary = "actualizar un topico en la base de datos")
     public ResponseEntity actualizarTopico(@PathVariable Long id,@RequestBody DatosActualizacionTopico datos) {
         Optional<Topicos> optionalTopico = topicosRepository.findById(id);
 
@@ -52,6 +55,7 @@ public class TopicosController {
 
     @DeleteMapping("/{id}")
     @Transactional
+    @Operation(summary = "eliminar un topico en la base de datos")
     public ResponseEntity eliminarTopico(@PathVariable Long id) {
         Optional<Topicos> optionalTopico = topicosRepository.findById(id);
 
@@ -65,6 +69,7 @@ public class TopicosController {
 
     @GetMapping("/{id}")
     @Transactional
+    @Operation(summary = "obtener detaller de un solo topico en la base de datos")
     public ResponseEntity detalleTopico(@PathVariable Long id) {
         Topicos topicos = topicosRepository.getReferenceById(id);
         return ResponseEntity.ok(new DatosRespuestaTopicos(topicos));

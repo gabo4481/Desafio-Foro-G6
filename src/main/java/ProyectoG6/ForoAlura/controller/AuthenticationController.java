@@ -4,6 +4,7 @@ import ProyectoG6.ForoAlura.infra.security.DatosJWTToken;
 import ProyectoG6.ForoAlura.infra.security.TokenService;
 import ProyectoG6.ForoAlura.usuarios.DatosUsuariosAuthenticatios;
 import ProyectoG6.ForoAlura.usuarios.Usuarios;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ public class AuthenticationController {
 
     @PostMapping
     @Transactional
+    @Operation(summary = "autentica el usuario en la base de datos y genera token")
     public ResponseEntity login(@RequestBody @Valid DatosUsuariosAuthenticatios datos){
         Authentication authToken = new UsernamePasswordAuthenticationToken(datos.email(),
                 datos.password());
